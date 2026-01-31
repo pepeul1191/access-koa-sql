@@ -124,15 +124,16 @@
             'Authorization': `Bearer ${jwtToken}`
           },
         }); 
-        console.log(response);
+        //console.log(response);
+        const genericResponse = response.data;
         if(response.status == 200){
-          user.updated = toDatetimeLocalWithSeconds(response.data.updated);
+          //user.updated = toDatetimeLocalWithSeconds(genericResponse.data.updated);
           message.text = 'Se ha editado el usuario';
           message.status = 'success';
           cleanMessage(true);
         }else{
-          console.log(response.data)
-          message.text = response.data.error;
+          console.log(genericResponse.data)
+          message.text = genericResponse.data.error;
           message.status = 'danger';
           cleanMessage(false);
         }

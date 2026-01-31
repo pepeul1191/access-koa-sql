@@ -101,3 +101,26 @@ export const createUser = async ({ username, email, password = null }) => {
     updated: formatDateTime(data.updated),
   };
 };
+
+export const updateUser = async (id, { username, email }) => {
+  // Buscar el usuario por id
+  const user = await User.findByPk(id);
+  if (!user) {
+    throw new Error('Usuario no encontrado');
+  }
+
+  // Actualizar solo si vienen datos
+  if (username) user.username = username;
+  if (email) user.email = email;
+
+  user.updated = new Date(); // actualizar la fecha
+  await user.save();
+
+  const data = user.toJSON();
+
+  return {
+    ...data,
+    created: formatDateTime(data.created),
+    updated: formatDateTime(data.updated),
+  };
+};

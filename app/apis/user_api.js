@@ -87,3 +87,39 @@ export const create = async (ctx) => {
     };
   }
 };
+
+export const update = async (ctx) => {
+  try {
+    const { id } = ctx.params;
+    const { username, email } = ctx.request.body;
+
+    if (!username && !email) {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+        message: 'Debe enviar al menos un campo a actualizar',
+        data: null,
+        error: 'Campos faltantes',
+      };
+      return;
+    }
+
+    await userService.updateUser(id, { username, email });
+
+    ctx.status = 200;
+    ctx.body = {
+      success: true,
+      message: 'Usuario actualizado correctamente',
+      data: null,
+      error: '',
+    };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      message: 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};
