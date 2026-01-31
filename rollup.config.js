@@ -7,6 +7,34 @@ import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 
+const App = {
+	input: 'src/entries/app.js',
+	output: {
+		sourcemap: true,
+		format: 'iife',
+		name: 'app',
+		file: production ? 'public/dist/app.min.js' : 'public/dist/app.js',
+	},
+	plugins: [
+		svelte({
+			compilerOptions: {
+				dev: !production
+			}
+		}),
+		css({ output: production ?  'app.min.css' : 'app.css' }),
+		resolve({
+			browser: true,
+			dedupe: ['svelte'],
+			exportConditions: ['svelte']
+		}),
+		commonjs(),
+		production && terser()
+	],
+	watch: {
+		clearScreen: false
+	}
+};
+
 const Web = {
 	input: 'src/entries/web.js',
 	output: {
@@ -79,4 +107,4 @@ const Vendor = {
 	}
 };
 
-export default [Web, Vendor, ];
+export default [App, Web, Vendor, ];

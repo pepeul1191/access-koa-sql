@@ -72,5 +72,5 @@ export async function logout(ctx) {
     console.error('Error al cerrar sesión:', err);
   }
 
-  ctx.redirect('/login');
+  ctx.redirect('/sign-in');
 }

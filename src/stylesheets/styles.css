@@ -150,3 +150,15 @@ a i {
 .btn, .form-control, .alert{
   border-radius: 0px;
 }
+
+h1{
+  font-size: 24px;
+}
+
+hr {
+  margin-top: 0px;
+}
+
+h4{
+  font-size: 18px;
+}

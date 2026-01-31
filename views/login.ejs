@@ -7,96 +7,112 @@
     <link rel="stylesheet" type="text/css" href="http://localhost:5000/dist/vendor.min.css">
     <link rel="stylesheet" type="text/css" href="http://localhost:5000/dist/web.css">
   </head>
-  <body class="bg-light">
-    <div class="container vh-100 d-flex align-items-center justify-content-center">
-      <div class="card shadow-sm" style="max-width: 420px; width: 100%;">
-        <div class="card-body p-4">
+<body class="bg-light">
 
-          <h4 class="text-center mb-4">Iniciar sesión</h4>
+  <div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-100 shadow-sm" style="max-width: 900px; background: #fff; border-radius: 0px; overflow: hidden;">
 
-          <% if (hasFlashMessages) { %>
-            <div class="flash-messages">
-              <!-- Mensajes de éxito -->
-              <% if (success_messages && success_messages.length > 0) { %>
-                <% success_messages.forEach(msg => { %>
-                  <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fa fa-check-circle me-2"></i>
-                    <%= msg %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                <% }) %>
-              <% } %>
-              
-              <!-- Mensajes de error -->
-              <% if (error_messages && error_messages.length > 0) { %>
-                <% error_messages.forEach(msg => { %>
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fa fa-exclamation-circle me-2"></i>
-                    <%= msg %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                <% }) %>
-              <% } %>
-              
-              <!-- Mensajes de advertencia -->
-              <% if (warning_messages && warning_messages.length > 0) { %>
-                <% warning_messages.forEach(msg => { %>
-                  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <i class="fa fa-exclamation-triangle me-2"></i>
-                    <%= msg %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                <% }) %>
-              <% } %>
-              
-              <!-- Mensajes informativos -->
-              <% if (info_messages && info_messages.length > 0) { %>
-                <% info_messages.forEach(msg => { %>
-                  <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    <i class="fa fa-info-circle me-2"></i>
-                    <%= msg %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                <% }) %>
-              <% } %>
-            </div>
-          <% } %>
+      <!-- Columna izquierda: Bienvenida -->
+      <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center bg-primary text-white p-4">
+        <h2 class="mb-3 text-center">¡Bienvenido a Innova ULima!</h2>
+        <p class="lead text-center">
+          Accede a tu cuenta para administrar tu información y disfrutar de todas las funcionalidades de la plataforma.
+        </p>
+      </div>
 
-          <form method="POST" action="/sign-in">
-            <div class="mb-3">
-              <label for="user" class="form-label">Usuario</label>
-              <input
-                type="text"
-                class="form-control"
-                id="user"
-                name="user"
-                value="<%= typeof user !== 'undefined' ? user : '' %>"
-                required
-                autofocus
-              >
-            </div>
+      <!-- Columna derecha: Formulario -->
+      <div class="col-md-6 d-flex flex-column justify-content-center p-4">
+        <h4 class="text-center mb-4">Iniciar sesión</h4>
 
-            <div class="mb-3">
-              <label for="password" class="form-label">Contraseña</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-                required
-              >
-            </div>
+        <% if (hasFlashMessages) { %>
+          <div class="flash-messages">
+            <!-- Mensajes de éxito -->
+            <% if (success_messages && success_messages.length > 0) { %>
+              <% success_messages.forEach(msg => { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <i class="fa fa-check-circle me-2"></i>
+                  <%= msg %>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              <% }) %>
+            <% } %>
+            
+            <!-- Mensajes de error -->
+            <% if (error_messages && error_messages.length > 0) { %>
+              <% error_messages.forEach(msg => { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <i class="fa fa-exclamation-circle me-2"></i>
+                  <%= msg %>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              <% }) %>
+            <% } %>
+            
+            <!-- Mensajes de advertencia -->
+            <% if (warning_messages && warning_messages.length > 0) { %>
+              <% warning_messages.forEach(msg => { %>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <i class="fa fa-exclamation-triangle me-2"></i>
+                  <%= msg %>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              <% }) %>
+            <% } %>
+            
+            <!-- Mensajes informativos -->
+            <% if (info_messages && info_messages.length > 0) { %>
+              <% info_messages.forEach(msg => { %>
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                  <i class="fa fa-info-circle me-2"></i>
+                  <%= msg %>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+        <% } %>
 
-            <div class="d-grid mb-3">
-              <button type="submit" class="btn btn-primary">
-                Entrar
-              </button>
-            </div>
-          </form>
+        <form method="POST" action="/sign-in">
+          <div class="mb-3">
+            <label for="user" class="form-label">Usuario</label>
+            <input
+              type="text"
+              class="form-control"
+              id="user"
+              name="user"
+              value="<%= typeof user !== 'undefined' ? user : '' %>"
+              required
+              autofocus
+            >
+          </div>
 
-        </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              required
+            >
+          </div>
+
+          <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-primary">
+              Entrar
+            </button>
+          </div>
+
+          <div class="text-center">
+            <a href="/reset-password" class="small">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+        </form>
       </div>
     </div>
-    <script src="http://localhost:5000/dist/vendor.js"></script>
-  </body>
+  </div>
+
+  <script src="http://localhost:5000/dist/vendor.js"></script>
+</body>
 </html>

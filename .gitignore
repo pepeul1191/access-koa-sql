@@ -29,7 +29,6 @@ build/
 
 # Optional: SQLite/local DBs
 *.sqlite
-*.db
 
 # Optional: PM2 logs
 pids/

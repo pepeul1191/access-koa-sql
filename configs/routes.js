@@ -10,6 +10,7 @@ const router = new Router();
 ====================== */
 
 router.get('/', requireAuth, appController.home);
+router.get('/systems', requireAuth, appController.home);
 router.get('/sign-in', redirectIfAuthenticated, appController.signIn);
 router.post('/sign-in', redirectIfAuthenticated, appController.login);
 router.get('/sign-out', requireAuth, appController.logout);

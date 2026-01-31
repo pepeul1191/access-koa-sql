@@ -31,7 +31,9 @@
 
     "svelte": "^4.2.18",
     "svelte-app": "file:",
-    "svelte-routing": "^2.13.0"
+    "svelte-routing": "^2.13.0",
+
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.0",
@@ -43,7 +45,8 @@
     "rollup-plugin-css-only": "^4.3.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.1.2",
-    "svelte-preprocess": "^6.0.3"
+    "svelte-preprocess": "^6.0.3",
+    "dbmate": "^2.15.0"
   },
   "license": "ISC",
   "keywords": [],
