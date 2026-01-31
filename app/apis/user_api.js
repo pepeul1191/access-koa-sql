@@ -124,6 +124,130 @@ export const update = async (ctx) => {
   }
 };
 
+export const updatePassword = async (ctx) => {
+  try {
+    const { id } = ctx.params;
+    const { password } = ctx.request.body;
+
+    if (!password) {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+        message: 'Debe enviar la contraseña para actualizar',
+        data: null,
+        error: 'Campos faltantes',
+      };
+      return;
+    }
+
+    await userService.updateUserPassword(id, password);
+
+    ctx.status = 200;
+    ctx.body = {
+      success: true,
+      message: 'Usuario actualizado correctamente',
+      data: null,
+      error: '',
+    };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      message: 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};
+
+export const updateActivated = async (ctx) => {
+  try {
+    const { id } = ctx.params;
+    const { activated } = ctx.request.body;
+
+    if (typeof activated !== 'boolean') {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+        message: 'Debe enviar la contraseña para actualizar',
+        data: null,
+        error: 'Campos faltantes',
+      };
+      return;
+    }
+
+    await userService.updateActivated(id, activated);
+
+    ctx.status = 200;
+    ctx.body = {
+      success: true,
+      message: 'Estado de usuario actualizado correctamente',
+      data: activated,
+      error: '',
+    };
+  } catch (error) {
+    console.error(error.stack);
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      message: 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};
+
+export const updateActivationKey = async (ctx) => {
+  try {
+    const { id } = ctx.params;
+
+    await userService.updateActivationKey(id);
+
+    ctx.status = 200;
+    ctx.body = {
+      success: true,
+      message: 'Código de activación de usuario actualizado correctamente',
+      data: null,
+      error: '',
+    };
+  } catch (error) {
+    console.error(error.stack);
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      message: 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};
+
+export const updateResetKey = async (ctx) => {
+  try {
+    const { id } = ctx.params;
+
+    const user = await userService.updateResetKey(id);
+    await userService.sendResetKeyEmail(user);
+
+    ctx.status = 200;
+    ctx.body = {
+      success: true,
+      message: 'Correo de cambio de contraseña usuario enviado',
+      data: null,
+      error: '',
+    };
+  } catch (error) {
+    console.error(error.stack);
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      message: 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};
+
 export const deleteR = async (ctx) => {
   try {
     const { id } = ctx.params;

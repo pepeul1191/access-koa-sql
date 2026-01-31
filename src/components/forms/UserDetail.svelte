@@ -76,7 +76,7 @@
     user.email = record.email;
     user.activated = record.activated;
     btnsDisabled = false;
-    //console.log(record)
+    console.log(record)
   }
 
   const cleanMessage = (dispatchToParent) => {
@@ -272,7 +272,9 @@
         });
         message.text = 'Se ha cambiado el estado de cuenta del usuario';
         message.status = 'success';
-        user.activated = response.data;
+        const genericResponse = response.data;
+
+        user.activated = genericResponse.data;
         // notificar al padre que se ha actualizado algo
         cleanMessage(false);
       }else{

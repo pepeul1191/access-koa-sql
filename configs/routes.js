@@ -19,6 +19,10 @@ router.get('/sign-out', requireAuth, appController.logout);
 router.get('/api/v1/users', requireAuth, userApis.fetchAll);
 router.post('/api/v1/users', requireAuth, userApis.create);
 router.put('/api/v1/users/:id', requireAuth, userApis.update);
+router.put('/api/v1/users/:id/password', requireAuth, userApis.updatePassword);
+router.put('/api/v1/users/:id/activated', requireAuth, userApis.updateActivated);
+router.put('/api/v1/users/:id/activation-key', requireAuth, userApis.updateActivationKey);
+router.put('/api/v1/users/:id/reset-key', requireAuth, userApis.updateResetKey);
 router.delete('/api/v1/users/:id', requireAuth, userApis.deleteR);
 
 export default router;

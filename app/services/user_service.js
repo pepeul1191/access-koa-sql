@@ -45,6 +45,7 @@ export const fetchUsers = async ({
       'email',
       'created',
       'updated',
+      'activated',
     ],
   });
 
@@ -123,6 +124,102 @@ export const updateUser = async (id, { username, email }) => {
     created: formatDateTime(data.created),
     updated: formatDateTime(data.updated),
   };
+};
+
+export const updateUserPassword = async (id, password) => {
+  // Buscar el usuario por id
+  const user = await User.findByPk(id);
+  if (!user) {
+    throw new Error('Usuario no encontrado');
+  }
+
+  // Actualizar solo si vienen datos
+  if (password) user.password = await bcrypt.hash(password, 10);
+
+  user.updated = new Date(); // actualizar la fecha
+  await user.save();
+
+  const data = user.toJSON();
+
+  return {
+    ...data,
+    updated: formatDateTime(data.updated),
+  };
+};
+
+export const updateActivated = async (id, activated) => {
+  // Buscar el usuario por id
+  const user = await User.findByPk(id);
+  if (!user) {
+    throw new Error('Usuario no encontrado');
+  }
+
+  // Actualizar solo si vienen datos
+  user.activated = activated;
+
+  user.updated = new Date(); // actualizar la fecha
+  await user.save();
+
+  const data = user.toJSON();
+
+  return {
+    ...data,
+    updated: formatDateTime(data.updated),
+  };
+};
+
+export const updateActivationKey = async (id) => {
+  // Buscar el usuario por id
+  const user = await User.findByPk(id);
+  if (!user) {
+    throw new Error('Usuario no encontrado');
+  }
+
+  // Actualizar solo si vienen datos
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  user.activation_key = Array.from({ length: 30 }, () =>
+    chars[Math.floor(Math.random() * chars.length)]
+  ).join('');
+
+  user.updated = new Date(); // actualizar la fecha
+  await user.save();
+
+  const data = user.toJSON();
+
+  return {
+    ...data,
+    updated: formatDateTime(data.updated),
+  };
+};
+
+export const updateResetKey = async (id) => {
+  // Buscar el usuario por id
+  const user = await User.findByPk(id);
+  if (!user) {
+    throw new Error('Usuario no encontrado');
+  }
+
+  // Actualizar solo si vienen datos
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  user.reset_key = Array.from({ length: 30 }, () =>
+    chars[Math.floor(Math.random() * chars.length)]
+  ).join('');
+
+  user.updated = new Date(); // actualizar la fecha
+  await user.save();
+
+  const data = user.toJSON();
+
+  return {
+    ...data,
+    updated: formatDateTime(data.updated),
+  };
+};
+
+export const sendResetKeyEmail = async (user) => {
+  // Buscar el usuario por id
+  console.log(user);
+  console.log('ENVIAR CORREO TODO');
 };
 
 export const deleteUser = async (id) => {
