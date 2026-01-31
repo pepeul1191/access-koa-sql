@@ -341,12 +341,14 @@
         },
       )
       .then(function (response) {
-        data = [];
+        //data = [];
         if(pagination.display){
-          data = response.data.list;
-          pagination.totalPages = response.data.pages;
-          pagination.offset = response.data.offset + 1;
-          pagination.total = response.data.total;
+          let genericResponse = response.data.data;
+          console.log(genericResponse)
+          data = genericResponse.list;
+          pagination.totalPages = genericResponse.pages;
+          pagination.offset = genericResponse.offset + 1;
+          pagination.total = genericResponse.total;
           pagination.limit = pagination.offset + pagination.step - 1 > pagination.total ? pagination.total : pagination.offset + pagination.step - 1; 
         }else{
           data = response.data;
@@ -429,6 +431,10 @@
 
   th > .form-check-input{
     margin-left: 10px;
+  }
+
+  #rows-per-page{
+    border-radius: 0px;
   }
 </style>
 <!-- modal -->

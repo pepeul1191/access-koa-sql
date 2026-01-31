@@ -32,9 +32,9 @@
       <label for="name" class="form-label">Buscar por Nombre</label>
       <input type="text" class="form-control" id="name" placeholder="Nombre" bind:value={name}>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-5">
       <label for="email" class="form-label">Buscar por Correo</label>
-      <input type="text" class="form-control" id="email" placeholder="Descripción" bind:value={email}>
+      <input type="text" class="form-control" id="email" placeholder="Correo" bind:value={email}>
     </div>
     <div class="col-md-4 d-flex align-items-end">
       <button type="submit" class="btn btn-primary me-2" on:click={searchClick}>

@@ -45,8 +45,8 @@
   }
 
   const handleSearchFilter = (event) => {
-    const { name, description } = event.detail;
-    userDataTable.queryParams = {name,description};
+    const { name, email } = event.detail;
+    userDataTable.queryParams = {name,email};
     userDataTable.list();
   }
   
