@@ -1,0 +1,152 @@
+/* custom.css - Coloca ESTO después de bootstrap.min.css */
+:root {
+  /* COLOR PRIMARIO (#ff5117 - naranja) */
+  --bs-primary: #ff5117;
+  --bs-primary-rgb: 255, 81, 23;
+  --bs-primary-dark: #cc4012;
+  --bs-primary-light: #ff7345;
+  
+  /* COLOR SECUNDARIO (#1d1d1b - negro casi puro) */
+  --bs-secondary: #1d1d1b;
+  --bs-secondary-rgb: 29, 29, 27;
+  --bs-secondary-dark: #0f0f0e;
+  --bs-secondary-light: #2c2c29;
+  
+  /* Estados del primario */
+  --bs-primary-bg-subtle: #ffe5dc;
+  --bs-primary-border-subtle: #ffc6b3;
+  --bs-primary-text-emphasis: #b33810;
+  
+  /* Estados del secundario */
+  --bs-secondary-bg-subtle: #e8e8e7;
+  --bs-secondary-border-subtle: #d1d1d0;
+  --bs-secondary-text-emphasis: #0f0f0e;
+}
+
+/* Esto afectará automáticamente a: */
+
+/* 1. BOTONES */
+/* .btn-primary */
+.btn-primary {
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: var(--bs-primary-dark);
+  --bs-btn-hover-border-color: var(--bs-primary-dark);
+  --bs-btn-focus-bg: var(--bs-primary-dark);
+  --bs-btn-focus-border-color: var(--bs-primary-dark);
+  --bs-btn-active-bg: var(--bs-primary-dark);
+  --bs-btn-active-border-color: var(--bs-primary-dark);
+  --bs-btn-disabled-bg: var(--bs-primary);
+  --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+/* .btn-secondary */
+.btn-secondary {
+  --bs-btn-bg: var(--bs-secondary);
+  --bs-btn-border-color: var(--bs-secondary);
+  --bs-btn-hover-bg: var(--bs-secondary-dark);
+  --bs-btn-hover-border-color: var(--bs-secondary-dark);
+  --bs-btn-focus-bg: var(--bs-secondary-dark);
+  --bs-btn-focus-border-color: var(--bs-secondary-dark);
+  --bs-btn-active-bg: var(--bs-secondary-dark);
+  --bs-btn-active-border-color: var(--bs-secondary-dark);
+  --bs-btn-disabled-bg: var(--bs-secondary);
+  --bs-btn-disabled-border-color: var(--bs-secondary);
+}
+
+/* 2. BADGES */
+.bg-primary, .badge.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.bg-secondary, .badge.bg-secondary {
+  background-color: var(--bs-secondary) !important;
+}
+
+/* 3. TEXTOS */
+.text-primary {
+  color: var(--bs-primary) !important;
+}
+
+.text-secondary {
+  color: var(--bs-secondary) !important;
+}
+
+/* 4. BORDES */
+.border-primary {
+  border-color: var(--bs-primary) !important;
+}
+
+.border-secondary {
+  border-color: var(--bs-secondary) !important;
+}
+
+/* 5. BACKGROUNDS */
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--bs-secondary) !important;
+}
+
+/* 6. LINKS (opcional, si quieres que coincidan) */
+a {
+  color: var(--bs-primary);
+}
+
+a:hover {
+  color: var(--bs-primary-dark);
+}
+
+/* 7. ALERTAS */
+.alert-primary {
+  --bs-alert-color: var(--bs-primary-text-emphasis);
+  --bs-alert-bg: var(--bs-primary-bg-subtle);
+  --bs-alert-border-color: var(--bs-primary-border-subtle);
+}
+
+.alert-secondary {
+  --bs-alert-color: var(--bs-secondary-text-emphasis);
+  --bs-alert-bg: var(--bs-secondary-bg-subtle);
+  --bs-alert-border-color: var(--bs-secondary-border-subtle);
+}
+
+/* 8. FORM CONTROLES (checks, radios) */
+.form-check-input:checked {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.form-check-input:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* 9. PROGRESS BARS */
+.progress-bar {
+  background-color: var(--bs-primary);
+}
+
+/* 10. PAGINATION (opcional) */
+.page-link {
+  color: var(--bs-primary);
+}
+
+.page-link:hover {
+  color: var(--bs-primary-dark);
+}
+
+.page-item.active .page-link {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+/* estilos generales */
+a i {
+  margin-right: 5px;
+}
+
+.btn, .form-control, .alert{
+  border-radius: 0px;
+}
