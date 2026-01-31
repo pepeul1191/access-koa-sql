@@ -8,10 +8,15 @@
     "dev-expp": "npx nodemon server.js --ignore public/* --ignore src/*",
     "prepare:sessions": "node -e \"require('fs').mkdirSync('sessions', { recursive: true })\"",
     "dev": "npm run prepare:sessions & npm run dev-expp & npm run svelte",
+    "db:new": "npx dbmate -d \"db/migrations\" -e \"DB\" new ",
+    "db:up": "npx dbmate -d \"db/migrations\" -e \"DB\" up",
+    "db:rollback": "npx dbmate -d \"db/migrations\" -e \"DB\" rollback",
+    "db:dump": "npx dbmate -d \"db/migrations\" -e \"DB\" dump ",
     "svelte": "rollup -c -w"
   },
   "dependencies": {
     "axios": "^1.6.0",
+    "bcrypt": "^6.0.0",
     "bootstrap": "^5.3.3",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.9",

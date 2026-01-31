@@ -17,5 +17,6 @@ router.post('/sign-in', redirectIfAuthenticated, appController.login);
 router.get('/sign-out', requireAuth, appController.logout);
 // api/user
 router.get('/api/v1/users', requireAuth, userApis.fetchAll);
+router.post('/api/v1/users', requireAuth, userApis.create);
 
 export default router;

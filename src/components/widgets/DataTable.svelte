@@ -344,7 +344,7 @@
         //data = [];
         if(pagination.display){
           let genericResponse = response.data.data;
-          console.log(genericResponse)
+          
           data = genericResponse.list;
           pagination.totalPages = genericResponse.pages;
           pagination.offset = genericResponse.offset + 1;

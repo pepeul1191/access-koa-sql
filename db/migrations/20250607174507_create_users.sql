@@ -2,7 +2,7 @@
 
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username VARCHAR(20) NOT NULL,
+  username VARCHAR(20) NOT NULL UNIQUE,
   password VARCHAR(100) NOT NULL,
   activation_key VARCHAR(30),
   reset_key VARCHAR(30),

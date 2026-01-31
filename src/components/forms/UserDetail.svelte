@@ -110,7 +110,8 @@
             'Authorization': `Bearer ${jwtToken}`
           },
         });
-        user.id = response.data.id;
+        const genericResponse = response.data;
+        user.id = genericResponse.data.id;
         message.text = 'Se ha creado el sistema';
         message.status = 'success';
         // notificar al padre que se ha actualizado algo
@@ -318,7 +319,7 @@
     </div>
 
     <div class="col-3">
-      <button type="submit" class="btn btn-success">
+      <button type="submit" class="btn btn-primary">
         <i class="fa fa-save"></i> Grabar Usuario
       </button>
     </div>
@@ -334,7 +335,7 @@
       <button type="button" disabled={btnsDisabled} class="btn btn-secondary mr-2" on:click={regeneratePassword} style="margin-right: 20px;" >
         <i class="fa fa-random"></i> Generar Contraseña Segura
       </button>
-      <button type="button" disabled={btnsDisabled} class="btn btn-success" on:click={savePassword}>
+      <button type="button" disabled={btnsDisabled} class="btn btn-secondary" on:click={savePassword}>
         <i class="fa fa-save"></i> Actualizar Contraseña
       </button>
     </div>
@@ -347,11 +348,11 @@
     <h4 class="subtitle mb-3">Estado de Cuenta</h4>
     <div class="d-flex justify-content-start">
       {#if user.activated}
-        <button disabled={btnsDisabled} class="btn btn-danger" on:click={(event) => activationAccount(event, false)}>
+        <button disabled={btnsDisabled} class="btn btn-secondary" on:click={(event) => activationAccount(event, false)}>
           <i class="fa fa-times"></i> Desactivar Cuenta
         </button>
       {:else}
-        <button disabled={btnsDisabled} class="btn btn-primary" on:click={(event) => activationAccount(event, true)}>
+        <button disabled={btnsDisabled} class="btn btn-secondary" on:click={(event) => activationAccount(event, true)}>
           <i class="fa fa-check"></i> Activar Cuenta
         </button>
       {/if}
@@ -362,10 +363,10 @@
   <div class="col-md-8">
     <h4 class="subtitle mb-3">Enviar Solicitudes a Correo</h4>
     <div class="d-flex flex-wrap gap-2">
-      <button disabled={btnsDisabled} class="btn btn-info" on:click={activationEmail} style="margin-right: 10px;" >
+      <button disabled={btnsDisabled} class="btn btn-secondary" on:click={activationEmail} style="margin-right: 10px;" >
         <i class="fa fa-envelope"></i> Activación de Cuenta
       </button>
-      <button disabled={btnsDisabled} class="btn btn-warning" on:click={passwordEmail}>
+      <button disabled={btnsDisabled} class="btn btn-secondary" on:click={passwordEmail}>
         <i class="fa fa-refresh"></i> Cambio de Contraseña
       </button>
     </div>

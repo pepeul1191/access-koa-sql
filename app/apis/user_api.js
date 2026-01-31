@@ -47,3 +47,43 @@ export const fetchAll = async (ctx) => {
     };
   }
 };
+
+export const create = async (ctx) => {
+  try {
+    const { username, email } = ctx.request.body;
+
+    if (!username || !email) {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+        message: 'Faltan datos obligatorios',
+        data: null,
+        error: 'Username y email son requeridos',
+      };
+      return;
+    }
+
+    const user = await userService.createUser({ username, email });
+
+    ctx.status = 201;
+    ctx.body = {
+      success: true,
+      message: 'Usuario creado correctamente',
+      data: {
+        id: user.id,
+        pages: 1,
+        total: 1,
+        offset: 0,
+      },
+      error: '',
+    };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      message: 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};

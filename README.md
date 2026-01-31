@@ -12,4 +12,14 @@ Una aplicación web simple que muestra "Hola Mundo" utilizando Express, EJS como
 - Navegación entre páginas
 - Estilos CSS personalizados
 
+Contenido del archivo .env
+
+    #### DBMATE
+    DB=sqlite:db/app.db
+    ### APP
+    SITE_TITLE=Mi sitio web
+    ADMIN_EMAIL=admin@ejemplo.com
+    DEFAULT_USER=admin
+    DEFAULT_PASSWORD=123
+
 ## Estructura del proyecto
