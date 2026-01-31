@@ -123,3 +123,40 @@ export const update = async (ctx) => {
     };
   }
 };
+
+export const deleteR = async (ctx) => {
+  try {
+    const { id } = ctx.params;
+
+    if (!id) {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+        message: 'ID de usuario requerido',
+        data: null,
+        error: 'ID faltante',
+      };
+      return;
+    }
+
+    await userService.deleteUser(id);
+
+    ctx.status = 200;
+    ctx.body = {
+      success: true,
+      message: 'Usuario eliminado correctamente',
+      data: null,
+      error: '',
+    };
+  } catch (error) {
+    ctx.status = error.message === 'Usuario no encontrado' ? 404 : 500;
+    ctx.body = {
+      success: false,
+      message: error.message === 'Usuario no encontrado'
+        ? 'Usuario no encontrado'
+        : 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};

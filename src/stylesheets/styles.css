@@ -5,18 +5,18 @@
   --bs-primary-rgb: 255, 81, 23;
   --bs-primary-dark: #cc4012;
   --bs-primary-light: #ff7345;
-  
+
   /* COLOR SECUNDARIO (#1d1d1b - negro casi puro) */
   --bs-secondary: #1d1d1b;
   --bs-secondary-rgb: 29, 29, 27;
   --bs-secondary-dark: #0f0f0e;
   --bs-secondary-light: #2c2c29;
-  
+
   /* Estados del primario */
   --bs-primary-bg-subtle: #ffe5dc;
   --bs-primary-border-subtle: #ffc6b3;
   --bs-primary-text-emphasis: #b33810;
-  
+
   /* Estados del secundario */
   --bs-secondary-bg-subtle: #e8e8e7;
   --bs-secondary-border-subtle: #d1d1d0;
@@ -55,11 +55,13 @@
 }
 
 /* 2. BADGES */
-.bg-primary, .badge.bg-primary {
+.bg-primary,
+.badge.bg-primary {
   background-color: var(--bs-primary) !important;
 }
 
-.bg-secondary, .badge.bg-secondary {
+.bg-secondary,
+.badge.bg-secondary {
   background-color: var(--bs-secondary) !important;
 }
 
@@ -144,14 +146,17 @@ a:hover {
 
 /* estilos generales */
 a i {
-  margin-right: 5px;
+  margin-right: 5px !important;
 }
 
-.btn, .form-control, .alert, .modal-content{
+.btn,
+.form-control,
+.alert,
+.modal-content {
   border-radius: 0px;
 }
 
-h1{
+h1 {
   font-size: 24px;
 }
 
@@ -159,6 +164,6 @@ hr {
   margin-top: 0px;
 }
 
-h4{
+h4 {
   font-size: 18px;
 }

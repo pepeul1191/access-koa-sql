@@ -124,3 +124,15 @@ export const updateUser = async (id, { username, email }) => {
     updated: formatDateTime(data.updated),
   };
 };
+
+export const deleteUser = async (id) => {
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    throw new Error('Usuario no encontrado');
+  }
+
+  await user.destroy();
+
+  return true;
+};

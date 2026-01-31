@@ -436,6 +436,10 @@
   #rows-per-page{
     border-radius: 0px;
   }
+
+  a > i {
+    margin-right: 5px !important;
+  }
 </style>
 <!-- modal -->
 <div bind:this={deleteConfirmationModal} class="modal fade" tabindex="-1">

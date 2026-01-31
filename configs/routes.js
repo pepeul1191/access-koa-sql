@@ -19,5 +19,6 @@ router.get('/sign-out', requireAuth, appController.logout);
 router.get('/api/v1/users', requireAuth, userApis.fetchAll);
 router.post('/api/v1/users', requireAuth, userApis.create);
 router.put('/api/v1/users/:id', requireAuth, userApis.update);
+router.delete('/api/v1/users/:id', requireAuth, userApis.deleteR);
 
 export default router;
