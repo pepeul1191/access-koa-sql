@@ -39,8 +39,8 @@
     name = system.name;
     description = system.description;
     repository = system.repository;
-    created = toDatetimeLocalWithSeconds(system.created);
-    updated = toDatetimeLocalWithSeconds(system.updated);
+    created = system.created;
+    updated = system.updated;
   }  
 
   const cleanMessage = (dispatchToParent) => {
@@ -76,21 +76,26 @@
             'Authorization': `Bearer ${jwtToken}`
           },
         });
-        created = toDatetimeLocalWithSeconds(response.data.created);
-        updated = toDatetimeLocalWithSeconds(response.data.updated);
+        const genericResponse = response.data;
+
+        created = genericResponse.data.created;
+        updated = genericResponse.data.updated;
+
         id = response.data.id;
         message.text = 'Se ha creado el sistema';
         message.status = 'success';
         // notificar al padre que se ha actualizado algo
         cleanMessage(true);
       }else{
-        response = await axios.put(API_URL + 'api/v1/systems', formData, {
+        response = await axios.put(API_URL + 'api/v1/systems/' + id , formData, {
           headers: {
             'Authorization': `Bearer ${jwtToken}`,
             'Content-Type': 'application/json',
           },
         });  
-        updated = toDatetimeLocalWithSeconds(response.data.updated);
+        const genericResponse = response.data;
+
+        updated = genericResponse.data.updated;
         message.text = 'Se ha editado el sistema';
         message.status = 'success';
         cleanMessage(true);
@@ -131,11 +136,11 @@
   <div class="row mb-3">
     <div class="col-6">
       <label for="created" class="form-label">Fecha de Creación</label>
-      <input type="datetime-local" class="form-control" id="created" name="created" bind:value={created} required disabled>
+      <input type="text" class="form-control" id="created" name="created" bind:value={created} required disabled>
     </div>
     <div class="col-6">
       <label for="updated" class="form-label">Fecha de Actualización</label>
-      <input type="datetime-local" class="form-control" id="updated" name="updated" bind:value={updated} required disabled>
+      <input type="text" class="form-control" id="updated" name="updated" bind:value={updated} required disabled>
     </div>
   </div>
   <div class="text-end">

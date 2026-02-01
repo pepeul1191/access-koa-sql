@@ -356,6 +356,7 @@
       })
       .catch(function (error) {
         console.error(error);
+        console.log(data)
         if(error.code == "ERR_NETWORK"){
           dispatch('alert', { 
             text: messages.errorNetwork,
@@ -472,7 +473,7 @@
 <div class="d-flex justify-content-between align-items-center">
   <!-- Parte izquierda: Filtro de filas por página -->
   <div class="d-flex align-items-center me-3">
-    {#if pagination.display}
+    {#if pagination.display && data.length > 0}
       <label for="rows-per-page" class="form-label mb-0 me-2">Filas por página:</label>
       <select class="form-select" id="rows-per-page" style="width: 120px;" bind:value={pagination.step} on:change={handleStepChange}>
         <option value={5}>5</option>
@@ -505,104 +506,108 @@
       </button>
     {/if}
   </div>
-</div>    
-<table class="table table-striped">
-  <thead>
-    <tr>
-      {#each columnNames as key, i}
-        {#if columnTypes[i] == 'radiobuttonAll'}
-          <th class="{columnClasses[i]}" style="{columnStyles[i]}" scope="col">
-            {columnNames[i]} 
-            <input
-              class="form-check-input form-check-input-all"
-              type="checkbox"
-              on:change={(event) => radioThClicked(event, columnKeys[i])}
-            />
-          </th>
-        {:else}
-          <th class="{columnClasses[i]}" style="{columnStyles[i]}" scope="col">{columnNames[i]}</th>
-        {/if}
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each data as record}
-    <tr>
-      {#each columnKeys as key, i}
-        <td class="data-td {columnClasses[i]}" style="{tdStyles[i]}">
-          {#if columnTypes[i] == 'input[text]'}
-            <input type="text" key="{key}" on:keydown={inputTextKeyDown} bind:value={record[key]} />
-          {:else if columnTypes[i] == 'td-datetime'}
-            {record[key]}
-          {:else if columnTypes[i] == 'radiobutton' || columnTypes[i] == 'radiobuttonAll'}
-            <input
-              class="form-check-input"
-              type="checkbox"
-              bind:checked={record[key]}
-              on:change={(event) => radioClicked(event, record, key, record[key])}
-            />
-          {:else} <!-- if columnTypes[i] == 'td'} -->
-            {record[key]}
-          {/if}
-        </td>
-      {/each}
-      {#if actionButtons.length > 0}
-        <td class="text-end" styles="">
-          {#each actionButtons as button}
-            <button class="btn {button.class}" on:click={() => {
-              if (typeof button.action === 'function') {
-                button.action(record);
-              } else {
-                alert('No se seteado un evento');
-              }
-            }}><i class="fa {button.icon}"></i> {button.label}</button>
-          {/each}
-        </td>
-      {/if}
-    </tr>
-    {/each}
-    </tbody>
-  {#if pagination.display}
-    <tfoot>
+</div>
+{#if data.length > 0}
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td colspan="6">
-          <div class="d-flex justify-content-between align-items-center">
-            <!-- Texto con el rango de filas mostradas (izquierda) -->
-            <div class="text-left">
-              <span>Página {pagination.actualPage} de {pagination.totalPages} - Mostrando filas {pagination.offset}-{pagination.limit} de {pagination.total}</span>
-            </div>
-            <!-- Paginación (derecha) -->
-            <nav aria-label="Page navigation">
-              <ul class="pagination mb-0">
-                <!-- Página Primero -->
-                <li class="page-item">
-                  <button class="page-link {pagination.actualPage === 1 ? 'disabled' : ''}" type="button" tabindex="-1" on:click={firstPage} disabled={pagination.actualPage === 1}>
-                    <i class="fa fa-angle-double-left"></i> Primero
-                  </button>
-                </li>
-                <!-- Página Anterior -->
-                <li class="page-item">
-                  <button class="page-link {pagination.actualPage === 1 ? 'disabled' : ''}" type="button" tabindex="-1" on:click={previousPage} disabled={pagination.actualPage === 1}>
-                    <i class="fa fa-angle-left"></i> Anterior
-                  </button>
-                </li>
-                <!-- Página Siguiente -->
-                <li class="page-item">
-                  <button class="page-link {pagination.actualPage === pagination.totalPages ? 'disabled' : ''}" type="button" on:click={nextPage} disabled={pagination.actualPage === pagination.totalPages}>
-                    Siguiente <i class="fa fa-angle-right"></i>
-                  </button>
-                </li>
-                <!-- Página Último -->
-                <li class="page-item">
-                  <button class="page-link {pagination.actualPage === pagination.totalPages ? 'disabled' : ''}" type="button" on:click={lastPage} disabled={pagination.actualPage === pagination.totalPages}>
-                    Último <i class="fa fa-angle-double-right"></i>
-                  </button>
-                </li>
-              </ul>              
-            </nav>
-          </div>
-        </td>
+        {#each columnNames as key, i}
+          {#if columnTypes[i] == 'radiobuttonAll'}
+            <th class="{columnClasses[i]}" style="{columnStyles[i]}" scope="col">
+              {columnNames[i]} 
+              <input
+                class="form-check-input form-check-input-all"
+                type="checkbox"
+                on:change={(event) => radioThClicked(event, columnKeys[i])}
+              />
+            </th>
+          {:else}
+            <th class="{columnClasses[i]}" style="{columnStyles[i]}" scope="col">{columnNames[i]}</th>
+          {/if}
+        {/each}
       </tr>
-    </tfoot>
-  {/if}
-</table>
+    </thead>
+    <tbody>
+      {#each data as record}
+      <tr>
+        {#each columnKeys as key, i}
+          <td class="data-td {columnClasses[i]}" style="{tdStyles[i]}">
+            {#if columnTypes[i] == 'input[text]'}
+              <input type="text" key="{key}" on:keydown={inputTextKeyDown} bind:value={record[key]} />
+            {:else if columnTypes[i] == 'td-datetime'}
+              {record[key]}
+            {:else if columnTypes[i] == 'radiobutton' || columnTypes[i] == 'radiobuttonAll'}
+              <input
+                class="form-check-input"
+                type="checkbox"
+                bind:checked={record[key]}
+                on:change={(event) => radioClicked(event, record, key, record[key])}
+              />
+            {:else} <!-- if columnTypes[i] == 'td'} -->
+              {record[key]}
+            {/if}
+          </td>
+        {/each}
+        {#if actionButtons.length > 0}
+          <td class="text-end" styles="">
+            {#each actionButtons as button}
+              <button class="btn {button.class}" on:click={() => {
+                if (typeof button.action === 'function') {
+                  button.action(record);
+                } else {
+                  alert('No se seteado un evento');
+                }
+              }}><i class="fa {button.icon}"></i> {button.label}</button>
+            {/each}
+          </td>
+        {/if}
+      </tr>
+      {/each}
+      </tbody>
+    {#if pagination.display && data.length > 0}
+      <tfoot>
+        <tr>
+          <td colspan="6">
+            <div class="d-flex justify-content-between align-items-center">
+              <!-- Texto con el rango de filas mostradas (izquierda) -->
+              <div class="text-left">
+                <span>Página {pagination.actualPage} de {pagination.totalPages} - Mostrando filas {pagination.offset}-{pagination.limit} de {pagination.total}</span>
+              </div>
+              <!-- Paginación (derecha) -->
+              <nav aria-label="Page navigation">
+                <ul class="pagination mb-0">
+                  <!-- Página Primero -->
+                  <li class="page-item">
+                    <button class="page-link {pagination.actualPage === 1 ? 'disabled' : ''}" type="button" tabindex="-1" on:click={firstPage} disabled={pagination.actualPage === 1}>
+                      <i class="fa fa-angle-double-left"></i> Primero
+                    </button>
+                  </li>
+                  <!-- Página Anterior -->
+                  <li class="page-item">
+                    <button class="page-link {pagination.actualPage === 1 ? 'disabled' : ''}" type="button" tabindex="-1" on:click={previousPage} disabled={pagination.actualPage === 1}>
+                      <i class="fa fa-angle-left"></i> Anterior
+                    </button>
+                  </li>
+                  <!-- Página Siguiente -->
+                  <li class="page-item">
+                    <button class="page-link {pagination.actualPage === pagination.totalPages ? 'disabled' : ''}" type="button" on:click={nextPage} disabled={pagination.actualPage === pagination.totalPages}>
+                      Siguiente <i class="fa fa-angle-right"></i>
+                    </button>
+                  </li>
+                  <!-- Página Último -->
+                  <li class="page-item">
+                    <button class="page-link {pagination.actualPage === pagination.totalPages ? 'disabled' : ''}" type="button" on:click={lastPage} disabled={pagination.actualPage === pagination.totalPages}>
+                      Último <i class="fa fa-angle-double-right"></i>
+                    </button>
+                  </li>
+                </ul>              
+              </nav>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    {/if}
+  </table>
+{:else}
+  <p class="text-center">No hay registros para mostrar.</p>
+{/if}
