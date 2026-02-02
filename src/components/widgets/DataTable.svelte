@@ -504,7 +504,7 @@
         <i class="fa fa-plus me-2"></i> Agregar Registro
       </button>
     {/if}
-    {#if saveButton.display}
+    {#if saveButton.display && data.length > 0}
       <button class="btn btn-success d-flex align-items-center" on:click={saveChanges}>
         <i class="fa fa-check me-2"></i> Guardar Cambios
       </button>

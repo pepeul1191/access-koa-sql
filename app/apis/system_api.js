@@ -221,3 +221,47 @@ export const deleteR = async (ctx) => {
     };
   }
 };
+
+export const fetchUsers = async (ctx) => {
+  try {
+    const { username, email, status,step = 10, page = 1 } = ctx.query;
+    const { id } = ctx.params;
+
+    const [users, counts] = await Promise.all([
+      systemService.fetchUsers({ systemId: id, username, email, status, step, page }),
+      systemService.countTotalUsersPages({ systemId: id, username, email, status, step }),
+    ]);
+
+    if (!users || users.length === 0) {
+      ctx.status = 404;
+      ctx.body = {
+        success: false,
+        message: 'Recurso no encontrado',
+        data: null,
+        error: 'Error 404',
+      };
+      return;
+    }
+
+    ctx.body = {
+      success: true,
+      message: 'Lista de usuarios del sistema',
+      data: {
+        list: users,
+        pages: counts.totalPages,
+        total: counts.totalRecords,
+        offset: (Number(page) - 1) * step,
+      },
+      error: '',
+    };
+  } catch (error) {
+    console.error(error)
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      message: 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};

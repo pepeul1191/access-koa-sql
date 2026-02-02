@@ -1,7 +1,9 @@
 import { Op } from 'sequelize';
 
 import { formatDateTime } from '../configs/helpers.js';
+import sequelize from '../../configs/database.js';
 import System from '../models/system.js';
+import User from '../models/user.js';
 
 /**
  * Construye el where dinámico
@@ -146,3 +148,117 @@ export const deleteSystem = async (id) => {
 
   return true;
 };
+
+export const fetchUsers = async ({
+  systemId,
+  username,
+  email,
+  status,
+  step = 10,
+  page = 1,
+}) => {
+  if (!systemId) {
+    throw new Error('systemId es obligatorio');
+  }
+
+  const limit = Number(step);
+  const offset = (Number(page) - 1) * limit;
+
+  let where = 'WHERE 1=1';
+  const replacements = {
+    systemId,
+    limit,
+    offset,
+  };
+
+  // 🔹 Filtros opcionales
+  if (typeof username === 'string' && username.trim() !== '') {
+    where += ' AND users.username LIKE :username';
+    replacements.username = `%${username.trim()}%`;
+  }
+
+  if (typeof email === 'string' && email.trim() !== '') {
+    where += ' AND users.email LIKE :email';
+    replacements.email = `%${email.trim()}%`;
+  }
+
+  if (status === '1') {
+    where += ' AND su.user_id IS NOT NULL';
+  } else if (status === '0') {
+    where += ' AND su.user_id IS NULL';
+  }
+
+  const query = `
+    SELECT
+      users.id,
+      users.username,
+      users.email,
+      users.activated,
+      CASE
+        WHEN su.user_id IS NOT NULL THEN 1
+        ELSE 0
+      END AS association_status
+    FROM users
+    LEFT JOIN systems_users su
+      ON users.id = su.user_id
+      AND su.system_id = :systemId
+    ${where}
+    LIMIT :limit OFFSET :offset
+  `;
+
+  return sequelize.query(query, {
+    replacements,
+    type: sequelize.QueryTypes.SELECT,
+  });
+};
+
+export const countTotalUsersPages = async ({
+  systemId,
+  username,
+  email,
+  status,
+  step = 10,
+}) => {
+  if (!systemId) {
+    throw new Error('systemId es obligatorio');
+  }
+
+  let where = 'WHERE 1=1';
+  const replacements = { systemId };
+
+  if (typeof username === 'string' && username.trim() !== '') {
+    where += ' AND users.username LIKE :username';
+    replacements.username = `%${username.trim()}%`;
+  }
+
+  if (typeof email === 'string' && email.trim() !== '') {
+    where += ' AND users.email LIKE :email';
+    replacements.email = `%${email.trim()}%`;
+  }
+
+  if (status === '1') {
+    where += ' AND su.user_id IS NOT NULL';
+  } else if (status === '0') {
+    where += ' AND su.user_id IS NULL';
+  }
+
+  const countQuery = `
+    SELECT COUNT(DISTINCT users.id) AS total
+    FROM users
+    LEFT JOIN systems_users su
+      ON users.id = su.user_id
+      AND su.system_id = :systemId
+    ${where}
+  `;
+
+  const [result] = await sequelize.query(countQuery, {
+    replacements,
+    type: sequelize.QueryTypes.SELECT,
+  });
+
+  const totalRecords = result.total;
+  const totalPages = Math.ceil(totalRecords / Number(step));
+
+  return { totalPages, totalRecords };
+};
+

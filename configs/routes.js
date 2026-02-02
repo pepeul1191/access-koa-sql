@@ -13,6 +13,7 @@ const router = new Router();
 router.get('/', requireAuth, appController.home);
 router.get('/systems', requireAuth, appController.home);
 router.get('/users', requireAuth, appController.home);
+router.get('/systems/:id/users', requireAuth, appController.home);
 // login
 router.get('/sign-in', redirectIfAuthenticated, appController.signIn);
 router.post('/sign-in', redirectIfAuthenticated, appController.login);
@@ -31,6 +32,7 @@ router.get('/api/v1/systems', requireAuth, systemApis.fetchAll);
 router.post('/api/v1/systems', requireAuth, systemApis.create);
 router.put('/api/v1/systems/:id', requireAuth, systemApis.update);
 router.delete('/api/v1/systems/:id', requireAuth, systemApis.deleteR);
+router.get('/api/v1/systems/:id/users', requireAuth, systemApis.fetchUsers);
 // api/roles
 router.get('/api/v1/systems/:id/roles', requireAuth, roleApis.fetchSystemRoles);
 router.post('/api/v1/roles/:id', requireAuth, roleApis.saveRoles);
