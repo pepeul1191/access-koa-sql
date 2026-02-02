@@ -1,8 +1,7 @@
+// app/apis/system_api.js
+
 import * as systemService from '../services/system_service.js';
 
-/**
- * Listar configuraciones con paginación
- */
 export const fetchAll = async (ctx) => {
   try {
     const { name, description, step = 10, page = 1 } = ctx.query;

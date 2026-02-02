@@ -3,13 +3,10 @@ import Router from 'koa-router';
 import * as appController from '../app/controllers/application_controller.js';
 import * as userApis from '../app/apis/user_api.js';
 import * as systemApis from '../app/apis/system_api.js';
+import * as roleApis from '../app/apis/role_api.js';
 import { requireAuth, redirectIfAuthenticated } from './middlewares.js';
 
 const router = new Router();
-
-/* ======================
-   Rutas web
-====================== */
 
 // application
 router.get('/', requireAuth, appController.home);
@@ -33,5 +30,8 @@ router.get('/api/v1/systems', requireAuth, systemApis.fetchAll);
 router.post('/api/v1/systems', requireAuth, systemApis.create);
 router.put('/api/v1/systems/:id', requireAuth, systemApis.update);
 router.delete('/api/v1/systems/:id', requireAuth, systemApis.deleteR);
+// api/roles
+router.get('/api/v1/systems/:id/roles', requireAuth, roleApis.fetchSystemRoles);
+router.post('/api/v1/roles/:id', requireAuth, roleApis.saveRoles);
 
 export default router;

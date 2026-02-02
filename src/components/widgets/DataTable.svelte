@@ -239,7 +239,9 @@
         })
         .then(function (response) {
           // console.log(extraReplace)
-          response.data.forEach(created => {
+          let genericResponse = response.data;
+
+          genericResponse.data.forEach(created => {
             /*if(extraReplace.length != 0){
               extraReplace.forEach(value => {
                 dataSearch(recordId, created.tmp)[value] = created[value];
@@ -351,7 +353,9 @@
           pagination.total = genericResponse.total;
           pagination.limit = pagination.offset + pagination.step - 1 > pagination.total ? pagination.total : pagination.offset + pagination.step - 1; 
         }else{
-          data = response.data;
+          let genericResponse = response.data.data;
+          
+          data = genericResponse.list;
         }
       })
       .catch(function (error) {
