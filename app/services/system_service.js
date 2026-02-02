@@ -3,7 +3,7 @@ import { Op } from 'sequelize';
 import { formatDateTime } from '../configs/helpers.js';
 import sequelize from '../../configs/database.js';
 import System from '../models/system.js';
-import User from '../models/user.js';
+import SystemUser from '../models/system_user.js';
 
 /**
  * Construye el where dinámico
@@ -193,11 +193,10 @@ export const fetchUsers = async ({
       users.id,
       users.username,
       users.email,
-      users.activated,
       CASE
         WHEN su.user_id IS NOT NULL THEN 1
         ELSE 0
-      END AS association_status
+      END AS registered
     FROM users
     LEFT JOIN systems_users su
       ON users.id = su.user_id
@@ -262,3 +261,51 @@ export const countTotalUsersPages = async ({
   return { totalPages, totalRecords };
 };
 
+export const saveUsers = async (systemId, payload) => {
+  const transaction = await sequelize.transaction();
+
+  try {
+    const response = [];
+    const { edits = [] } = payload;
+
+    for (const incoming of edits) {
+      const { id: userId, registered } = incoming;
+      console.log(incoming)
+      console.log(registered)
+
+      if (registered === true) {
+        // 🔹 Crear la asociación si no existe
+        const [association, created] = await SystemUser.findOrCreate({
+          where: { system_id: systemId, user_id: userId },
+          defaults: { created: new Date() },
+          transaction,
+        });
+
+        if (created) {
+          response.push({
+            tmp: incoming.tmp || null,
+            id: association.id.toString(),
+          });
+        }
+
+      } else if (registered === false) {
+        // 🔹 Eliminar la asociación si existe
+        const association = await SystemUser.findOne({
+          where: { system_id: systemId, user_id: userId },
+          transaction,
+        });
+
+        if (association) {
+          await association.destroy({ transaction });
+        }
+      }
+    }
+
+    await transaction.commit();
+    return response;
+
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+};

@@ -33,6 +33,7 @@ router.post('/api/v1/systems', requireAuth, systemApis.create);
 router.put('/api/v1/systems/:id', requireAuth, systemApis.update);
 router.delete('/api/v1/systems/:id', requireAuth, systemApis.deleteR);
 router.get('/api/v1/systems/:id/users', requireAuth, systemApis.fetchUsers);
+router.post('/api/v1/systems/:id/users', requireAuth, systemApis.saveUsers);
 // api/roles
 router.get('/api/v1/systems/:id/roles', requireAuth, roleApis.fetchSystemRoles);
 router.post('/api/v1/roles/:id', requireAuth, roleApis.saveRoles);

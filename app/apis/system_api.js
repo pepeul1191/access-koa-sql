@@ -265,3 +265,38 @@ export const fetchUsers = async (ctx) => {
     };
   }
 };
+
+export const saveUsers = async (ctx) => {
+  try {
+    const { id } = ctx.params; // system_id
+
+    if (!id) {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+        message: 'ID de sistema inválido',
+        data: null,
+        error: '',
+      };
+      return;
+    }
+
+    const response = await systemService.saveUsers(id, ctx.request.body);
+
+    ctx.body = {
+      success: true,
+      message: 'Usuarios guardados correctamente',
+      data: response,
+      error: '',
+    };
+  } catch (error) {
+    console.error(error)
+    ctx.status = error.status || 500;
+    ctx.body = {
+      success: false,
+      message: error.message || 'Error interno del servidor',
+      data: null,
+      error: error.error || error.message,
+    };
+  }
+};
