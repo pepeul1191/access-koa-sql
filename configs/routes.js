@@ -4,6 +4,7 @@ import * as appController from '../app/controllers/application_controller.js';
 import * as userApis from '../app/apis/user_api.js';
 import * as systemApis from '../app/apis/system_api.js';
 import * as roleApis from '../app/apis/role_api.js';
+import * as permissionApis from '../app/apis/permission_api.js';
 import { requireAuth, redirectIfAuthenticated } from './middlewares.js';
 
 const router = new Router();
@@ -33,5 +34,8 @@ router.delete('/api/v1/systems/:id', requireAuth, systemApis.deleteR);
 // api/roles
 router.get('/api/v1/systems/:id/roles', requireAuth, roleApis.fetchSystemRoles);
 router.post('/api/v1/roles/:id', requireAuth, roleApis.saveRoles);
+// api/roles
+router.get('/api/v1/roles/:id/permissions', requireAuth, permissionApis.fetchRolePermission);
+router.post('/api/v1/permissions/:id', requireAuth, permissionApis.savePermissions);
 
 export default router;
