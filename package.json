@@ -21,6 +21,7 @@
     "dotenv": "^17.2.3",
     "ejs": "^3.1.9",
     "font-awesome": "^4.7.0",
+    "jsonwebtoken": "^9.0.3",
     "koa": "^2.15.0",
     "koa-bodyparser": "^4.4.1",
     "koa-connect-flash": "0.1.2",

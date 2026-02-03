@@ -11,7 +11,7 @@ import serve from 'koa-static';
 import flash from 'koa-connect-flash';
 
 import appRoutes from './routes.js';
-import { notFoundHandler, errorHandler } from './middlewares.js';
+import { notFoundHandler, errorHandler, headers } from './middlewares.js';
 
 dotenv.config();
 
@@ -28,9 +28,10 @@ export default async function bootstrap(app) {
   ];
 
   /* ======================
-     Logs
+     Logs y headers
   ====================== */
   app.use(morgan('dev'));
+  app.use(headers);
 
   /* ======================
      Body parsers

@@ -108,3 +108,22 @@ export async function redirectIfAuthenticated(ctx, next) {
 
   await next();
 }
+
+export const headers = async (ctx, next) => {
+  ctx.set('X-Powered-By', 'Koa'); // Agregar una cabecera personalizada
+  ctx.set('Server', 'Ubuntu'); // Identificar el servidor
+
+  // Permitir CORS
+  /*
+  ctx.set('Access-Control-Allow-Origin', '*'); // Permitir todas las origenes; ajusta según tus necesidades
+  ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Métodos permitidos
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Encabezados permitidos
+
+  // Manejo de OPTIONS
+  if (ctx.method === 'OPTIONS') {
+    ctx.status = 204; // No content
+    return;
+  }*/
+
+  await next(); // Continuar con la siguiente función middleware o ruta
+};

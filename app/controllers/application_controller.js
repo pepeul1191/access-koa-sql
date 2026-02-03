@@ -1,5 +1,8 @@
 // web/controllers.js
 //import * as webService from './services.js';
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.JWT_SECRET || 'tu_secreto';
 
 export async function home(ctx) {
   //const data = webService.getHomeData();
@@ -31,8 +34,16 @@ export async function login(ctx) {
       role: 'admin'
     };
 
-    ctx.flash('success', '¡Bienvenido! Has iniciado sesión correctamente.');
+    // Generar un JWT y almacenarlo en la sesión
+    const token = jwt.sign(
+      { id: ctx.session.user.id, username: ctx.session.user.username, role: ctx.session.user.role },
+      SECRET_KEY,
+      { expiresIn: '1h' } // Ajusta el tiempo de expiración según sea necesario
+    );
 
+    ctx.session.jwt = token; // Guardar el JWT en la sesión
+
+    ctx.flash('success', '¡Bienvenido! Has iniciado sesión correctamente.');
     ctx.redirect('/');
     return;
   }
@@ -64,7 +75,6 @@ export async function login(ctx) {
     hasFlashMessages
   });
 }
-
 export async function logout(ctx) {
   try {
     ctx.session = null; // 🔥 así se destruye la sesión en Koa

@@ -21,5 +21,6 @@ Contenido del archivo .env
     ADMIN_EMAIL=admin@ejemplo.com
     DEFAULT_USER=admin
     DEFAULT_PASSWORD=123
+    AUTH_HEADER=dXNlci1zdGlja3lfc2VjcmV0XzEyMzQ1Njc
 
 ## Estructura del proyecto

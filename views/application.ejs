@@ -13,59 +13,7 @@
 </head>
 <body class="" style="">
   <script>
-    function fetchTokensIfMissing() {
-      // Verificar si los tokens ya existen
-      var jwtToken = localStorage.getItem('jwtToken');
-
-      // Si ambos tokens ya están guardados, no hacer nada
-      if (jwtToken) {
-        console.log('Token ya existen en localStorage.');
-        return Promise.resolve(); // Salir sin hacer la petición
-      }
-
-      // Si alguno falta, hacer el GET a /tokens
-      return new Promise(function(resolve, reject) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/session', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        
-        xhr.onload = function() {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            var response = JSON.parse(xhr.responseText);
-            var token = response.user.token;
-            //console.log(tokens)
-
-            // Guardar ambos tokens en localStorage
-            if (token) {
-              localStorage.setItem('jwtToken', token);
-            }
-
-            console.log('Token guardado en localStorage.');
-            resolve();
-          } else {
-            reject(new Error('Error HTTP: ' + xhr.status));
-          }
-        };
-
-        xhr.onerror = function() {
-          reject(new Error('Error de red'));
-        };
-
-        xhr.send();
-      })
-      .catch(function(error) {
-        console.error('Error al obtener tokens:', error);
-        return Promise.reject(error);
-      });
-    }
-
-    fetchTokensIfMissing()
-      .then(function() {
-        console.log('Tokens listos para usar.');
-      })
-      .catch(function(err) {
-        console.error('No se pudieron obtener los tokens:', err);
-      });
+    
   </script>
   <script src="/dist/app.js"></script>
 </body>
