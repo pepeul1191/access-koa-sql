@@ -1,7 +1,6 @@
 @startuml
 skinparam linetype ortho
 
-
 entity users {
   +id : INTEGER <<PK>>
   --

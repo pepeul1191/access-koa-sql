@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt'; // si quieres generar password hash
 
 import { formatDateTime } from '../configs/helpers.js';
 import User from '../models/user.js';
+import sequelize from '../../configs/database.js';
+import UserPermission from '../models/user_permission.js';
 
 const buildWhere = ({ name, email }) => {
   const where = {};
@@ -232,4 +234,58 @@ export const deleteUser = async (id) => {
   await user.destroy();
 
   return true;
+};
+
+export const assignPermissions = async (userId, payload) => {
+  const transaction = await sequelize.transaction();
+
+  try {
+    const response = [];
+    const { edits = [] } = payload;
+
+    for (const incoming of edits) {
+      const {
+        id: permissionId,
+        is_assigned,
+      } = incoming;
+
+      if (is_assigned === true) {
+        // 🔹 Crear asociación si no existe
+        const [association, created] = await UserPermission.findOrCreate({
+          where: {
+            user_id: userId,
+            permission_id: permissionId,
+          },
+          defaults: {
+            created: new Date(),
+          },
+          transaction,
+        });
+
+        if (created) {
+          response.push({
+            tmp: incoming.tmp || null,
+            id: association.id.toString(),
+          });
+        }
+
+      } else if (is_assigned === false) {
+        // 🔹 Eliminar asociación si existe
+        await UserPermission.destroy({
+          where: {
+            user_id: userId,
+            permission_id: permissionId,
+          },
+          transaction,
+        });
+      }
+    }
+
+    await transaction.commit();
+    return response;
+
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
 };

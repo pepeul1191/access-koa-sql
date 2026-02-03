@@ -61,7 +61,8 @@
           //systemDataTable.askToDeleteRow(record, 'id');
           roleId = record.id;
           permissionsDataTable.fetchURL = API_URL + 'api/v1/roles/'+ roleId + '/users/' + userId;
-          permissionsDataTable.saveURL = API_URL + 'api/v1/roles/'+ roleId + '/users/' + userId;
+          permissionsDataTable.saveURL = API_URL + 'api/v1/users/'+ userId + '/permissions';
+
           permissionsDataTable.list();
           displayPermission = true;
         }
@@ -127,7 +128,7 @@
       <DataTable 
         bind:this={permissionsDataTable}
         fetchURL={API_URL + 'api/v1/roles/' + permissionId + '/permissions'}
-        saveURL={API_URL + 'api/v1/api/v1/systems-permissions/'+ systemId + '/users/' + userId}
+        saveURL={API_URL + 'api/v1/api/v1/users/'+ userId + '/permissions'}
         columnKeys={['id', 'name', 'is_assigned']}
         columnTypes={['id', 'td', 'radiobuttonAll']}
         columnNames={['ID', 'Nombre', 'Asignado']}
