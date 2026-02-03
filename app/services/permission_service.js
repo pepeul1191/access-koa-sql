@@ -95,3 +95,28 @@ export const savePermissions = async (roleId, payload) => {
     throw error;
   }
 };
+
+export const listUserPermissionsByRole = async (user_id, role_id) => {
+  const query = `
+      SELECT
+        p.id   AS id,
+        p.name,
+        CASE
+          WHEN up.id IS NULL THEN 0
+          ELSE 1
+        END AS is_assigned
+      FROM permissions p
+      LEFT JOIN users_permissions up
+        ON up.permission_id = p.id
+      AND up.user_id = :user_id 
+      WHERE p.role_id = :role_id 
+      ORDER BY p.id;
+    `;
+
+  const replacements = { role_id, user_id };
+
+  return sequelize.query(query, {
+    replacements,
+    type: sequelize.QueryTypes.SELECT,
+  });
+};

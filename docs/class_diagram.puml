@@ -1,76 +1,82 @@
 @startuml
+skinparam linetype ortho
 
-class User {
-  - id: int
-  - name: String
-  - password: String
-  - activation_key: String
-  - reset_key: String
-  - email: String
-  - activated: Boolean
-  - created: DateTime
-  - updated: DateTime
+
+entity users {
+  +id : INTEGER <<PK>>
+  --
+  username : VARCHAR(20)
+  password : VARCHAR(100)
+  activation_key : VARCHAR(30)
+  reset_key : VARCHAR(30)
+  email : VARCHAR(50)
+  activated : BOOLEAN
+  created : DATETIME
+  updated : DATETIME
 }
 
-class System {
-  - id: int
-  - name: String
-  - description: String
-  - repository: String
-  - created: DateTime
-  - updated: DateTime
+entity systems {
+  +id : INTEGER <<PK>>
+  --
+  name : VARCHAR(40)
+  description : TEXT
+  repository : VARCHAR(100)
+  created : DATETIME
+  updated : DATETIME
 }
 
-class Role {
-  - id: int
-  - name: String
-  - description: String
-  - created: DateTime
-  - updated: DateTime
-  - systemId: int
+entity roles {
+  +id : INTEGER <<PK>>
+  --
+  name : VARCHAR(40)
+  created : DATETIME
+  updated : DATETIME
+  system_id : INTEGER <<FK>>
 }
 
-class Role {
-  - id: int
-  - name: String
-  - description: String
-  - created: DateTime
-  - updated: DateTime
-  - roleId: int
+entity permissions {
+  +id : INTEGER <<PK>>
+  --
+  name : VARCHAR(40)
+  created : DATETIME
+  updated : DATETIME
+  role_id : INTEGER <<FK>>
 }
 
-class SystemUser {
-  - id: int
-  - system_id: int
-  - user_id: int
-  - created: DateTime
+entity systems_users {
+  +id : INTEGER <<PK>>
+  --
+  system_id : INTEGER <<FK>>
+  user_id : INTEGER <<FK>>
+  created : DATETIME
 }
 
-class SystemUserPermission {
-  - id: int
-  - created: DateTime
-  - system_id: int
-  - user_id: int
-  - permission_id: int
+entity users_permissions {
+  +id : INTEGER <<PK>>
+  --
+  user_id : INTEGER <<FK>>
+  permission_id : INTEGER <<FK>>
+  created : DATETIME
 }
 
-class SystemUserRole {
-  - id: int
-  - created: DateTime
-  - system_id: int
-  - user_id: int
-  - role_id: int
+entity users_roles {
+  +id : INTEGER <<PK>>
+  --
+  user_id : INTEGER <<FK>>
+  role_id : INTEGER <<FK>>
+  created : DATETIME
 }
 
-System "1" -- "m" Role
-Role "1" -- "m" Permission
-User "1" -- "m" SystemUser
-System "1" -- "m" SystemUser
-User "1" -- "m" SystemUserPermission
-System "1" -- "m" SystemUserPermission
-Permission "1" -- "m" SystemUserPermission
-User "1" -- "m" SystemUserRole
-System "1" -- "m" SystemUserRole
-Role "1" -- "m" SystemUserRole
+systems ||--o{ roles : has
+roles ||--o{ permissions : has
+
+users ||--o{ systems_users : assigned
+systems ||--o{ systems_users : includes
+
+users ||--o{ users_permissions : granted
+permissions ||--o{ users_permissions : uses
+
+users ||--o{ users_roles : granted
+roles ||--o{ users_roles : uses
 
 @enduml

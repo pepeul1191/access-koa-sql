@@ -1,9 +1,5 @@
 import * as permissionService from '../services/permission_service.js';
 
-/**
- * Obtener permisos por rol
- * GET /apis/v1/permissions/:id
- */
 export const fetchRolePermission = async (ctx) => {
   try {
     const { id } = ctx.params; // role_id
@@ -40,10 +36,6 @@ export const fetchRolePermission = async (ctx) => {
   }
 };
 
-/**
- * Crear / actualizar / eliminar permisos
- * POST /apis/v1/permissions/:id
- */
 export const savePermissions = async (ctx) => {
   try {
     const { id } = ctx.params; // role_id
@@ -65,6 +57,42 @@ export const savePermissions = async (ctx) => {
       success: true,
       message: 'Permisos guardados correctamente',
       data: response,
+      error: '',
+    };
+  } catch (error) {
+    ctx.status = error.status || 500;
+    ctx.body = {
+      success: false,
+      message: error.message || 'Error interno del servidor',
+      data: null,
+      error: error.error || error.message,
+    };
+  }
+};
+
+export const listUserPermissionsByRole = async (ctx) => {
+  try {
+    const { user_id, role_id } = ctx.params; // id
+
+    if (!user_id || !role_id) {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+        message: 'Faltan parámetros',
+        data: null,
+        error: '',
+      };
+      return;
+    }
+
+    const permissions = await permissionService.listUserPermissionsByRole(user_id, role_id);
+
+    ctx.body = {
+      success: true,
+      message: 'Lista de permisos',
+      data: {
+        list: permissions,
+      },
       error: '',
     };
   } catch (error) {

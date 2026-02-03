@@ -42,13 +42,11 @@ CREATE TABLE systems_users (
   FOREIGN KEY(system_id) REFERENCES systems(id),
   FOREIGN KEY(user_id) REFERENCES users(id)
 );
-CREATE TABLE systems_users_permissions (
+CREATE TABLE users_permissions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  system_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   permission_id INTEGER NOT NULL,
   created DATETIME NOT NULL,
-  FOREIGN KEY(system_id) REFERENCES systems(id),
   FOREIGN KEY(user_id) REFERENCES users(id),
   FOREIGN KEY(permission_id) REFERENCES permissions(id)
 );
@@ -63,22 +61,19 @@ SELECT
 FROM systems_users SU
 INNER JOIN users U ON SU.user_id = U.id
 /* vw_system_users(id,system_id,username,password,email,activated) */;
-CREATE TABLE systems_users_roles (
+CREATE TABLE users_roles (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  system_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   role_id INTEGER NOT NULL,
   created DATETIME NOT NULL,
-  FOREIGN KEY(system_id) REFERENCES systems(id),
   FOREIGN KEY(user_id) REFERENCES users(id),
   FOREIGN KEY(role_id) REFERENCES roles(id)
 );
-CREATE TRIGGER trg_a_insert_systems_users_permissions
-AFTER INSERT ON systems_users_permissions
+CREATE TRIGGER trg_a_insert_users_permissions
+AFTER INSERT ON users_permissions
 BEGIN
-  INSERT INTO systems_users_roles (system_id, user_id, role_id, created)
+  INSERT INTO users_roles (user_id, role_id, created)
   SELECT
-    NEW.system_id,
     NEW.user_id,
     p.role_id,
     NEW.created
@@ -86,29 +81,30 @@ BEGIN
   WHERE p.id = NEW.permission_id
     AND NOT EXISTS (
       SELECT 1
-      FROM systems_users_roles sur
-      WHERE sur.system_id = NEW.system_id
-        AND sur.user_id = NEW.user_id
-        AND sur.role_id = p.role_id
+      FROM users_roles ur
+      WHERE ur.user_id = NEW.user_id
+        AND ur.role_id = p.role_id
     );
 END;
-CREATE TRIGGER trg_a_delete_systems_users_permissions
-AFTER DELETE ON systems_users_permissions
+CREATE TRIGGER trg_a_delete_users_permissions
+AFTER DELETE ON users_permissions
 BEGIN
-  DELETE FROM systems_users_roles
-  WHERE system_id = OLD.system_id
-    AND user_id = OLD.user_id
+  DELETE FROM users_roles
+  WHERE user_id = OLD.user_id
     AND role_id = (
-      SELECT role_id FROM permissions WHERE id = OLD.permission_id
+      SELECT role_id
+      FROM permissions
+      WHERE id = OLD.permission_id
     )
     AND NOT EXISTS (
       SELECT 1
-      FROM systems_users_permissions sup
-      JOIN permissions p ON sup.permission_id = p.id
-      WHERE sup.system_id = OLD.system_id
-        AND sup.user_id = OLD.user_id
+      FROM users_permissions up
+      JOIN permissions p ON up.permission_id = p.id
+      WHERE up.user_id = OLD.user_id
         AND p.role_id = (
-          SELECT role_id FROM permissions WHERE id = OLD.permission_id
+          SELECT role_id
+          FROM permissions
+          WHERE id = OLD.permission_id
         )
     );
 END;

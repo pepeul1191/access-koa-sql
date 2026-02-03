@@ -40,5 +40,8 @@ router.post('/api/v1/roles/:id', requireAuth, roleApis.saveRoles);
 // api/roles
 router.get('/api/v1/roles/:id/permissions', requireAuth, permissionApis.fetchRolePermission);
 router.post('/api/v1/permissions/:id', requireAuth, permissionApis.savePermissions);
+// api/api/v1/systems-permissions/1/users/1/roles/2
+router.get('/api/v1/roles/:role_id/users/:user_id', requireAuth, permissionApis.listUserPermissionsByRole)
+
 
 export default router;
