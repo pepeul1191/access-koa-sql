@@ -1,11 +1,13 @@
 // app/services/user_service.js
 import { Op } from 'sequelize';
 import bcrypt from 'bcrypt'; // si quieres generar password hash
+import 'dotenv/config';
 
 import { formatDateTime } from '../configs/helpers.js';
 import User from '../models/user.js';
 import sequelize from '../../configs/database.js';
 import UserPermission from '../models/user_permission.js';
+import VwSystemUsers from '../models/vw_system_users.js';
 
 const buildWhere = ({ name, email }) => {
   const where = {};
@@ -80,13 +82,17 @@ export const createUser = async ({ username, email, password = null }) => {
     throw new Error('Username y email son requeridos');
   }
 
-  // Generar password random si no viene
   if (!password) {
-    password = Math.random().toString(36).slice(-8); // 8 chars random
+    password = Math.random().toString(36).slice(-8);
   }
 
-  // Hash opcional con bcrypt
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const pepper = process.env.CRYPTO;
+  if (!pepper) {
+    throw new Error('CRYPTO no está definido en el .env');
+  }
+
+  // 🔐 password + pepper
+  const hashedPassword = await bcrypt.hash(password + pepper, 10);
 
   const newUser = await User.create({
     username,
@@ -97,13 +103,13 @@ export const createUser = async ({ username, email, password = null }) => {
 
   const data = newUser.toJSON();
 
-  // Devolver el formato igual a fetchAll
   return {
     ...data,
     created: formatDateTime(data.created),
     updated: formatDateTime(data.updated),
   };
 };
+
 
 export const updateUser = async (id, { username, email }) => {
   // Buscar el usuario por id
@@ -129,25 +135,35 @@ export const updateUser = async (id, { username, email }) => {
 };
 
 export const updateUserPassword = async (id, password) => {
-  // Buscar el usuario por id
+  if (!password) {
+    throw new Error('La contraseña es requerida');
+  }
+
   const user = await User.findByPk(id);
   if (!user) {
     throw new Error('Usuario no encontrado');
   }
 
-  // Actualizar solo si vienen datos
-  if (password) user.password = await bcrypt.hash(password, 10);
+  const pepper = process.env.CRYPTO;
+  if (!pepper) {
+    throw new Error('CRYPTO no está definido en el .env');
+  }
 
-  user.updated = new Date(); // actualizar la fecha
+  // 🔐 password + pepper
+  user.password = await bcrypt.hash(password + pepper, 10);
+  user.updated = new Date();
+
   await user.save();
 
   const data = user.toJSON();
+  delete data.password; // nunca devolver el hash
 
   return {
     ...data,
     updated: formatDateTime(data.updated),
   };
 };
+
 
 export const updateActivated = async (id, activated) => {
   // Buscar el usuario por id
@@ -289,3 +305,66 @@ export const assignPermissions = async (userId, payload) => {
     throw error;
   }
 };
+
+export const signInByUsername = async ({ username, password, system_id }) => {
+  if (!username || !password || !system_id) {
+    const error = new Error('Datos incompletos');
+    error.status = 400;
+    throw error;
+  }
+
+  const user = await VwSystemUsers.findOne({
+    where: {
+      username,
+      system_id,
+      activated: true,
+    },
+  });
+
+  if (!user) {
+    const error = new Error(
+      'Usuario no registrado en el sistema o inactivo'
+    );
+    error.status = 401;
+    throw error;
+  }
+
+  const PEPPER = process.env.CRYPTO;
+  if (!PEPPER) {
+    const error = new Error('Configuración de seguridad inválida');
+    error.status = 500;
+    throw error;
+  }
+  const SALT_ROUNDS = Number(process.env.BCRYPT_ROUNDS || 10);
+
+  // 🔐 comparar password + pepper con el hash guardado
+  const hashedPassword = await bcrypt.hash(password + PEPPER, SALT_ROUNDS);
+
+  console.log('1 ++++++++++++++++++++++++++++++++');
+  console.log(username);
+  console.log(system_id);
+  console.log(password);
+  console.log(PEPPER);
+  console.log('2 ++++++++++++++++++++++++++++++++');
+  console.log(hashedPassword);
+  console.log(user.password)
+  console.log('3 ++++++++++++++++++++++++++++++++');
+
+  const isValidPassword = await bcrypt.compare(password + PEPPER, user.password);
+
+  if (!isValidPassword) {
+    const error = new Error('Credenciales inválidas');
+    error.status = 401;
+    throw error;
+  }
+
+
+  const data = user.toJSON();
+  delete data.password;
+
+  console.log('4 ++++++++++++++++++++++++++');
+  console.log(data);
+
+  return data;
+};
+

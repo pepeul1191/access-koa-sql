@@ -22,5 +22,6 @@ Contenido del archivo .env
     DEFAULT_USER=admin
     DEFAULT_PASSWORD=123
     AUTH_HEADER=dXNlci1zdGlja3lfc2VjcmV0XzEyMzQ1Njc
+    CRYPTO=mi_clave_secreta_super_larga_123!@#
 
 ## Estructura del proyecto

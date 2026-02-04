@@ -127,3 +127,28 @@ export const headers = async (ctx, next) => {
 
   await next(); // Continuar con la siguiente función middleware o ruta
 };
+
+export const authTrigger = async (ctx, next) => {
+  const authHeader = ctx.get('X-Auth-Trigger'); // obtiene el header
+  const expectedAuth = process.env.AUTH_HEADER;
+
+  console.log('1 +++++++++++++++++++++++++++');
+  console.log(authHeader);
+  console.log(expectedAuth);
+  console.log('2 +++++++++++++++++++++++++++');
+
+  // Validar existencia y valor
+  if (!authHeader || authHeader !== expectedAuth) {
+    ctx.status = 401;
+    ctx.body = {
+      success: false,
+      message: 'Acceso no autorizado',
+      data: null,
+      error: 'Error 401: No autenticado'
+    };
+    return;
+  }
+
+  // Si todo está OK, continúa
+  await next();
+};

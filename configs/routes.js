@@ -6,7 +6,7 @@ import * as systemApis from '../app/apis/system_api.js';
 import * as roleApis from '../app/apis/role_api.js';
 import * as permissionApis from '../app/apis/permission_api.js';
 import * as sessionApis from '../app/apis/session_api.js';
-import { requireAuth, redirectIfAuthenticated } from './middlewares.js';
+import { requireAuth, redirectIfAuthenticated, authTrigger } from './middlewares.js';
 
 const router = new Router();
 
@@ -45,5 +45,7 @@ router.post('/api/v1/roles/:id', requireAuth, roleApis.saveRoles);
 router.get('/api/v1/roles/:role_id/users/:user_id', requireAuth, permissionApis.listUserPermissionsByRole)
 // session
 router.get('/api/v1/sessions', requireAuth, sessionApis.getSession);
+// external
+router.post('/api/v1/users/sign-in/by-username', authTrigger, userApis.signInByUsername);
 
 export default router;

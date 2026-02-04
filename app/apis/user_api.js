@@ -319,3 +319,31 @@ export const assignPermissions = async (ctx) => {
     };
   }
 };
+
+export const signInByUsername = async (ctx) => {
+  try {
+    const { username, password, system_id } = ctx.request.body;
+
+    const response = await userService.signInByUsername({
+      username,
+      password,
+      system_id,
+    });
+
+    ctx.body = {
+      success: true,
+      message: 'Inicio de sesión exitoso',
+      data: response,
+      error: '',
+    };
+  } catch (error) {
+    console.error(error);
+    ctx.status = error.status || 500;
+    ctx.body = {
+      success: false,
+      message: error.message || 'Error interno del servidor',
+      data: null,
+      error: error.message,
+    };
+  }
+};
