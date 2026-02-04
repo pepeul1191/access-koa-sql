@@ -6,6 +6,7 @@ import * as systemApis from '../app/apis/system_api.js';
 import * as roleApis from '../app/apis/role_api.js';
 import * as permissionApis from '../app/apis/permission_api.js';
 import * as sessionApis from '../app/apis/session_api.js';
+import * as jwtApis from '../app/apis/jwt_api.js';
 import { requireAuth, redirectIfAuthenticated, authTrigger } from './middlewares.js';
 
 const router = new Router();
@@ -47,5 +48,6 @@ router.get('/api/v1/roles/:role_id/users/:user_id', requireAuth, permissionApis.
 router.get('/api/v1/sessions', requireAuth, sessionApis.getSession);
 // external
 router.post('/api/v1/users/sign-in/by-username', authTrigger, userApis.signInByUsername);
+router.get('/api/v1/token/translate', jwtApis.translate);
 
 export default router;

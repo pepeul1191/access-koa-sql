@@ -364,7 +364,7 @@ export const signInByUsername = async ({ username, password, system_id }) => {
   const tokenPayload = {
     id: data.user.id,
     username: data.user.username,
-    roles: data.roles.map(r => ({ id: r.id, name: r.name }))
+    roles: data.roles.map(r => ({ id: r.id, name: r.name, permissions: r.permissions }))
   };
 
   const token = jwt.sign(tokenPayload, SECRET_KEY, { expiresIn: '1h' });
