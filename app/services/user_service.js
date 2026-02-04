@@ -1,6 +1,7 @@
 // app/services/user_service.js
 import { Op } from 'sequelize';
 import bcrypt from 'bcrypt'; // si quieres generar password hash
+import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
 import { formatDateTime } from '../configs/helpers.js';
@@ -8,6 +9,9 @@ import User from '../models/user.js';
 import sequelize from '../../configs/database.js';
 import UserPermission from '../models/user_permission.js';
 import VwSystemUsers from '../models/vw_system_users.js';
+import VwUserRolesPermissions from '../models/vw_user_roles_permissions.js';
+
+const SECRET_KEY = process.env.JWT_SECRET || 'tu_secreto';
 
 const buildWhere = ({ name, email }) => {
   const where = {};
@@ -335,20 +339,6 @@ export const signInByUsername = async ({ username, password, system_id }) => {
     error.status = 500;
     throw error;
   }
-  const SALT_ROUNDS = Number(process.env.BCRYPT_ROUNDS || 10);
-
-  // 🔐 comparar password + pepper con el hash guardado
-  const hashedPassword = await bcrypt.hash(password + PEPPER, SALT_ROUNDS);
-
-  console.log('1 ++++++++++++++++++++++++++++++++');
-  console.log(username);
-  console.log(system_id);
-  console.log(password);
-  console.log(PEPPER);
-  console.log('2 ++++++++++++++++++++++++++++++++');
-  console.log(hashedPassword);
-  console.log(user.password)
-  console.log('3 ++++++++++++++++++++++++++++++++');
 
   const isValidPassword = await bcrypt.compare(password + PEPPER, user.password);
 
@@ -358,13 +348,58 @@ export const signInByUsername = async ({ username, password, system_id }) => {
     throw error;
   }
 
+  let data = {};
+  
+  data.user = user.toJSON();
+  delete data.user.password;
+  delete data.user.system_id;
+  delete data.user.activated;
 
-  const data = user.toJSON();
-  delete data.password;
+  const roles = await getUserRolesPermissions(data.user.id, system_id);
 
-  console.log('4 ++++++++++++++++++++++++++');
-  console.log(data);
+  data.roles = roles;
+
+  // 🔐 Generamos JWT
+  // Payload puede incluir id, username y roles (solo los ids y nombres)
+  const tokenPayload = {
+    id: data.user.id,
+    username: data.user.username,
+    roles: data.roles.map(r => ({ id: r.id, name: r.name }))
+  };
+
+  const token = jwt.sign(tokenPayload, SECRET_KEY, { expiresIn: '1h' });
+
+  data.jwt = token;
 
   return data;
 };
 
+const getUserRolesPermissions = async (user_id, system_id) => {
+  // Traemos todos los registros que correspondan
+  const records = await VwUserRolesPermissions.findAll({
+    where: { user_id, system_id },
+    raw: true, // devuelve objetos planos
+    order: [['role_id', 'ASC'], ['permission_id', 'ASC']],
+  });
+
+  // Agrupamos por rol
+  const rolesMap = {};
+
+  for (const r of records) {
+    if (!rolesMap[r.role_id]) {
+      rolesMap[r.role_id] = {
+        id: r.role_id,
+        name: r.role_name,
+        permissions: [],
+      };
+    }
+
+    rolesMap[r.role_id].permissions.push({
+      id: r.permission_id,
+      name: r.permission_name,
+    });
+  }
+
+  // Convertimos el map a array
+  return Object.values(rolesMap);
+};

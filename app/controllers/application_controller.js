@@ -75,6 +75,7 @@ export async function login(ctx) {
     hasFlashMessages
   });
 }
+
 export async function logout(ctx) {
   try {
     ctx.session = null; // 🔥 así se destruye la sesión en Koa

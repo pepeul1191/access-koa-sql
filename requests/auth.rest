@@ -7,7 +7,7 @@ Accept: application/json
 X-Auth-Trigger: {{xAuthAccess}}
 
 {
-"username": "bmccormick", "password": "123", "system_id": 1
+"username": "bmccormick", "password": "awdQ9G5kBkxZ5r4g", "system_id": 1
 }
 ##########
 
