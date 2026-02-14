@@ -324,6 +324,8 @@ export const signInByUsername = async (ctx) => {
   try {
     const { username, password, system_id } = ctx.request.body;
 
+    console.log(ctx.request.body)
+
     const response = await userService.signInByUsername({
       username,
       password,
