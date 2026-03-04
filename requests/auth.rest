@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:5000 
 @xAuthAccess = dXNlci1zdGlja3lfc2VjcmV0XzEyMzQ1Njc
-@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJibWNjb3JtaWNrIiwicm9sZXMiOlt7ImlkIjoxLCJuYW1lIjoicm9sIDEiLCJwZXJtaXNzaW9ucyI6W3siaWQiOjEsIm5hbWUiOiJwZXJtaXNvIDEuMSJ9LHsiaWQiOjIsIm5hbWUiOiJwZXJtaXNvcyAxLjIifSx7ImlkIjozLCJuYW1lIjoicGVybWlzbyAxLjMifV19LHsiaWQiOjIsIm5hbWUiOiJyb2wgMiIsInBlcm1pc3Npb25zIjpbeyJpZCI6NCwibmFtZSI6InBlcm1pc28gMi4xIn0seyJpZCI6NSwibmFtZSI6InBlcm1pc28gMi4yIn1dfV0sImlhdCI6MTc3MDI0NjUxNywiZXhwIjoxNzcwMjUwMTE3fQ.rS99XchC4O2C7qQJ59g7ifFC3vefk3oobOjF2Zf5ZaI
+@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJibWNjb3JtaWNrIiwicm9sZXMiOlt7ImlkIjoxLCJuYW1lIjoiRmlsZSBNYW5hZ21lbnQiLCJwZXJtaXNzaW9ucyI6W3siaWQiOjEsIm5hbWUiOiJmaWxlLW1hbmFnZXIifV19XSwiaWF0IjoxNzcyNTg2NTY5LCJleHAiOjE3NzI1OTAxNjl9.l3TIUv27SH9vMuCQ705pyDcGVDwg0QBMpuAPZ3Lktv8
 
 POST {{baseUrl}}/api/v1/users/sign-in/by-username
 Content-Type: application/json 
@@ -24,4 +24,11 @@ Accept: application/json
 
 GET {{baseUrl}}/api/v1/token/translate
 Accept: application/json
+Authorization: Bearer {{jwt}}
+
+##########
+
+GET {{baseUrl}}/api/v1/users/search-id-by-email?email=amandabaker@example.org
+Content-Type: application/json 
+Accept: application/json 
 Authorization: Bearer {{jwt}}

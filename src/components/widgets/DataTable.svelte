@@ -49,6 +49,25 @@
   };
   export let jwtToken = null;
 
+  // helpers for nested column keys (support dot notation)
+  const getNested = (obj, path) => {
+    if (!path || obj == null) return undefined;
+    return path.split('.').reduce((o, k) => (o != null ? o[k] : undefined), obj);
+  };
+
+  const setNested = (obj, path, value) => {
+    if (!path) return;
+    const keys = path.split('.');
+    let cur = obj;
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (cur[keys[i]] === undefined || cur[keys[i]] === null) {
+        cur[keys[i]] = {};
+      }
+      cur = cur[keys[i]];
+    }
+    cur[keys[keys.length - 1]] = value;
+  };
+
   // delete confirmation modal
   let deleteConfirmationInstance;
   let deleteConfirmationModal;
@@ -69,7 +88,7 @@
   });
 
   export const askToDeleteRow = (record, key) => {
-    idForDeleting = record[key];
+    idForDeleting = getNested(record, key);
     deleteConfirmationInstance.show();
   }
 
@@ -119,11 +138,12 @@
 
   export const addRow = () => {
     let tmp = {}
-    for(const key in columnKeys){
-      if(columnKeys[key] == 'id' || columnKeys[key]=='_id'){
-        tmp[columnKeys[key]] = `tmp_${random(10)}`;;
+    for(const idx in columnKeys){
+      const key = columnKeys[idx];
+      if(key == 'id' || key=='_id'){
+        setNested(tmp, key, `tmp_${random(10)}`);
       }else{
-        tmp[columnKeys[key]] = '';
+        setNested(tmp, key, '');
       }
     }
     data.push(tmp)
@@ -131,7 +151,7 @@
   }
 
   export const deleteRow = (record, keyId) => {
-    let idToRemove = record[keyId];
+    let idToRemove = getNested(record, keyId);
     // remove from observers new and edit y agregarlo a delete
     if(observer.new.includes(idToRemove)){
       observer.new = observer.new.filter(u => u !== idToRemove);
@@ -143,7 +163,7 @@
       observer.delete.push(idToRemove)
     }
     // remove from data
-    data = data.filter(item => item[keyId] !== idToRemove);
+    data = data.filter(item => getNested(item, keyId) !== idToRemove);
   }
 
   const inputTextKeyDown = (event) => {
@@ -346,7 +366,6 @@
         //data = [];
         if(pagination.display){
           let genericResponse = response.data.data;
-          
           data = genericResponse.list;
           pagination.totalPages = genericResponse.pages;
           pagination.offset = genericResponse.offset + 1;

@@ -7,7 +7,7 @@ import * as roleApis from '../app/apis/role_api.js';
 import * as permissionApis from '../app/apis/permission_api.js';
 import * as sessionApis from '../app/apis/session_api.js';
 import * as jwtApis from '../app/apis/jwt_api.js';
-import { requireAuth, redirectIfAuthenticated, authTrigger } from './middlewares.js';
+import { requireAuth, redirectIfAuthenticated, authTrigger, validateJWT } from './middlewares.js';
 
 const router = new Router();
 
@@ -30,6 +30,8 @@ router.put('/api/v1/users/:id/activation-key', requireAuth, userApis.updateActiv
 router.put('/api/v1/users/:id/reset-key', requireAuth, userApis.updateResetKey);
 router.post('/api/v1/users/:id/permissions', requireAuth, userApis.assignPermissions);
 router.delete('/api/v1/users/:id', requireAuth, userApis.deleteR);
+// users - external
+router.get('/api/v1/users/search-id-by-email', validateJWT, userApis.searchIdByEmail);
 // systems
 router.get('/api/v1/systems', requireAuth, systemApis.fetchAll);
 router.post('/api/v1/systems', requireAuth, systemApis.create);

@@ -403,3 +403,24 @@ const getUserRolesPermissions = async (user_id, system_id) => {
   // Convertimos el map a array
   return Object.values(rolesMap);
 };
+
+export const searchIdByEmail = async (email) => {
+  if (!email) {
+    const error = new Error('Email es requerido');
+    error.status = 400;
+    throw error;
+  }
+
+  const user = await User.findOne({
+    where: { email },
+    attributes: ['id'],
+  });
+
+  if (!user) {
+    const error = new Error('Usuario no encontrado');
+    error.status = 404;
+    throw error;
+  }
+
+  return user.id;
+};

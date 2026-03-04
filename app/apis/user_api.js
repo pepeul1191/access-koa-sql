@@ -349,3 +349,48 @@ export const signInByUsername = async (ctx) => {
     };
   }
 };
+
+export const searchIdByEmail = async (ctx) => {
+  try {
+    const { email } = ctx.query; // <-- Cambiado de ctx.request.body
+
+    if (!email) {
+      ctx.status = 400;
+      ctx.body = {
+        success: false,
+        message: 'Email es requerido',
+        data: null,
+        error: 'Campo faltante',
+      };
+      return;
+    }
+
+    const userId = await userService.searchIdByEmail(email);
+
+    if (!userId) {
+      ctx.status = 404;
+      ctx.body = {
+        success: false,
+        message: 'Usuario no encontrado',
+        data: null,
+        error: 'Error 404',
+      };
+      return;
+    }
+
+    ctx.body = {
+      success: true,
+      message: 'ID de usuario encontrado',
+      data: { id: userId },
+      error: '',
+    };
+  } catch (error) {
+    console.error(error);
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      message: 'Error interno del servidor',  
+      error: error.message,
+    };
+  }
+}

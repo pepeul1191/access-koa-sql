@@ -39,6 +39,7 @@ export const translate = async (ctx) => {
     };
 
   } catch (error) {
+    console.log(error);
     ctx.status = 401;
     ctx.body = {
       success: false,
