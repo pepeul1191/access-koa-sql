@@ -413,7 +413,7 @@ export const searchIdByEmail = async (email) => {
 
   const user = await User.findOne({
     where: { email },
-    attributes: ['id'],
+    attributes: ['id', 'username'],
   });
 
   if (!user) {
@@ -422,5 +422,5 @@ export const searchIdByEmail = async (email) => {
     throw error;
   }
 
-  return user.id;
+  return user;
 };

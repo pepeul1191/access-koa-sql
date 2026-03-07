@@ -365,9 +365,9 @@ export const searchIdByEmail = async (ctx) => {
       return;
     }
 
-    const userId = await userService.searchIdByEmail(email);
+    const {id, username} = await userService.searchIdByEmail(email);
 
-    if (!userId) {
+    if (!id) {
       ctx.status = 404;
       ctx.body = {
         success: false,
@@ -381,7 +381,7 @@ export const searchIdByEmail = async (ctx) => {
     ctx.body = {
       success: true,
       message: 'ID de usuario encontrado',
-      data: { id: userId },
+      data: { id, username },
       error: '',
     };
   } catch (error) {
