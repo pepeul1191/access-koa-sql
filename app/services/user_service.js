@@ -340,7 +340,8 @@ export const signInByUsername = async ({ username, password, system_id }) => {
     throw error;
   }
 
-  const isValidPassword = await bcrypt.compare(password + PEPPER, user.password);
+  //const isValidPassword = await bcrypt.compare(password + PEPPER, user.password);
+  const isValidPassword = (user.password == password) ? true : false;
 
   if (!isValidPassword) {
     const error = new Error('Credenciales inválidas');
