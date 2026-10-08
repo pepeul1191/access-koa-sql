@@ -78,7 +78,7 @@ export const countTotalPages = async ({
 
   const totalRecords = await User.count({ where });
   const totalPages = Math.ceil(totalRecords / Number(step));
-  return {totalPages, totalRecords};
+  return { totalPages, totalRecords };
 };
 
 export const createUser = async ({ username, email, password = null }) => {
@@ -349,7 +349,7 @@ export const signInByUsername = async ({ username, password, system_id }) => {
   }
 
   let data = {};
-  
+
   data.user = user.toJSON();
   delete data.user.password;
   delete data.user.system_id;
